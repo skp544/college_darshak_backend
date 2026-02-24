@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import logger from "./config/logger.js";
 import { errorHandler, successHandler } from "./utils/api-handlers.js";
+import userRouter from "./routes/user.routes.js";
 
 const app = express();
 
@@ -39,6 +40,8 @@ app.get("/health", (req, res) => {
     .status(200)
     .json({ message: "Server is Healthy!", status: "Healthy", success: true });
 });
+
+app.use("/api/v1/auth", userRouter);
 
 app.use((req, res) => {
   errorHandler({ res, message: "Not found", statusCode: 404 });
