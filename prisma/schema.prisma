@@ -5,10 +5,157 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+//////////////////////////////////////////////////////
+// ENUMS
+//////////////////////////////////////////////////////
+
+enum Role {
+  ADMIN
+  STUDENT
+  MENTOR
+}
+
+enum IdentifierType {
+  EMAIL
+  PHONE
+}
+
+enum CollegeType {
+  PRIVATE
+  GOVERNMENT
+  SEMIGOVERNMENT
+}
+
+//////////////////////////////////////////////////////
+// USER MODEL
+//////////////////////////////////////////////////////
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  phoneNo   String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+
+  mentorDetails MentorDetails?
+}
+
+//////////////////////////////////////////////////////
+// OTP MODEL (NO FK — PRE-REGISTRATION)
+//////////////////////////////////////////////////////
+
+model OtpSchema {
+  id             String         @id @default(uuid())
+  identifier     String
+  identifierType IdentifierType
+  otp            String
+  createdAt      DateTime       @default(now())
+  expiresAt      DateTime
+  verified       Boolean        @default(false)
+
+  @@index([identifier])
+}
+
+//////////////////////////////////////////////////////
+// MENTOR DETAILS (1:1 WITH USER)
+//////////////////////////////////////////////////////
+
+model MentorDetails {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  name      String
+  dob       DateTime
+  biography String
+  city      String
+  state     String
+  location  String
+  verified  Boolean  @default(false)
+
+  collegeId String?
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  college College? @relation(fields: [collegeId], references: [id], onDelete: Restrict)
+
+  academicDetails AcademicDetails?
+  languages       MentorLanguages[]
+}
+
+//////////////////////////////////////////////////////
+// ACADEMIC DETAILS (1:1 WITH MENTOR)
+//////////////////////////////////////////////////////
+
+model AcademicDetails {
+  id                String  @id @default(uuid())
+  mentorId          String  @unique
+  university        String
+  course            String
+  specialization    String
+  currentYear       Int
+  courseType        String
+  courseDuration    String
+  currentCGPA       Float
+  lastSemAttendance Float
+  placed            Boolean
+  companyName       String?
+  hostelAvail       Boolean
+  marksheetUrl      String
+  profilePhoto      String
+
+  mentor MentorDetails @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+}
+
+//////////////////////////////////////////////////////
+// COLLEGE (1:N WITH MENTORS)
+//////////////////////////////////////////////////////
+
+model College {
+  id            String      @id @default(uuid())
+  collegeName   String
+  description   String
+  established   String
+  type          CollegeType
+  location      String
+  state         String
+  accreditation String
+  phoneNo       String
+  website       String
+
+  mentors MentorDetails[]
+  courses CollegeCourses[]
+}
+
+//////////////////////////////////////////////////////
+// MENTOR LANGUAGES (1:N)
+//////////////////////////////////////////////////////
+
+model MentorLanguages {
+  id       String @id @default(uuid())
+  mentorId String
+  language String
+
+  mentor MentorDetails @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+
+  @@index([mentorId])
+}
+
+//////////////////////////////////////////////////////
+// COLLEGE COURSES (1:N)
+//////////////////////////////////////////////////////
+
+model CollegeCourses {
+  id         String @id @default(uuid())
+  collegeId  String
+  courseName String
+
+  college College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@index([collegeId])
 }
