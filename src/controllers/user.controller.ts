@@ -1,7 +1,8 @@
+import { RequestHandler } from "express";
 import { generateOtpService, verifyOtpService } from "../services/user.service";
-import { errorHandler, successHandler } from "../utils/api-handlers";
+import { successHandler, errorHandler } from "../utils/api-handlers";
 
-export const generateOtpController = async (req, res) => {
+export const generateOtpController: RequestHandler = async (req, res) => {
   try {
     const { identifier, identifierType } = req.body;
 
@@ -19,13 +20,11 @@ export const generateOtpController = async (req, res) => {
     return errorHandler({
       res,
       error,
-      message: error.message,
-      statusCode: error.statusCode || 500,
     });
   }
 };
 
-export const verifyOtpController = async (req, res) => {
+export const verifyOtpController: RequestHandler = async (req, res) => {
   try {
     const { identifier, otp } = req.body;
 
@@ -42,8 +41,6 @@ export const verifyOtpController = async (req, res) => {
     return errorHandler({
       res,
       error,
-      message: error.message,
-      statusCode: error.statusCode || 500,
     });
   }
 };

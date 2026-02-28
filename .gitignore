@@ -3,3 +3,5 @@ node_modules
 logs
 migrations
 /generated/prisma
+postman
+.postman

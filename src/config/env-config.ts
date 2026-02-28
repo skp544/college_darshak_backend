@@ -5,3 +5,5 @@ const ENV_CONFIG = {
 };
 
 export default ENV_CONFIG;
+
+export type ENV_CONFIG = typeof ENV_CONFIG;
