@@ -5,3 +5,4 @@ migrations
 /generated/prisma
 postman
 .postman
+dist

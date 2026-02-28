@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsnd --respawn -r tsconfig-paths/register --pretty --transpile-only ./src/index.ts",
     "build": "tsc && tsc-alias",
-    "start": "node ./dist"
+    "start": "node dist/src/index.js"
   },
   "keywords": [],
   "author": "Shubham",
@@ -18,6 +18,7 @@
     "@types/express": "^5.0.6",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.3.2",
+    "@types/nodemailer": "^7.0.11",
     "@types/pg": "^8.18.0",
     "prisma": "^7.4.2",
     "ts-node-dev": "^2.0.0",
@@ -34,6 +35,7 @@
     "express": "^5.2.1",
     "helmet": "^8.1.0",
     "morgan": "^1.10.1",
+    "nodemailer": "^8.0.1",
     "pg": "^8.19.0",
     "winston": "^3.19.0"
   }

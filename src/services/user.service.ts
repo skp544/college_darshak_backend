@@ -1,3 +1,4 @@
+import mailSender from "../helpers/mail";
 import { prisma } from "../lib/prisma";
 import { IdentifierType } from "../types";
 import { AppError } from "../utils/AppError";
@@ -33,6 +34,20 @@ export const generateOtpService = async ({
       expiresAt: new Date(Date.now() + 5 * 60 * 1000),
     },
   });
+
+  // Send Email if identifierType is EMAIL
+  if (identifierType === "EMAIL") {
+    await mailSender(
+      identifier,
+      "Your OTP for College Decode",
+      `
+      <h2>OTP Verification</h2>
+      <p>Your OTP is:</p>
+      <h1>${otp}</h1>
+      <p>This OTP will expire in 5 minutes.</p>
+      `,
+    );
+  }
 
   return { message: "OTP sent successfully" };
 };
