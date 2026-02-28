@@ -20,7 +20,7 @@ const logger = winston.createLogger({
     isProduction ? json() : combine(colorize(), devFormat),
   ),
 
-  defaultMeta: { service: "movie-booking-api" },
+  defaultMeta: { service: "collge-decode-api" },
 
   transports: [
     new winston.transports.Console(),
