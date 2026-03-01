@@ -14,7 +14,7 @@ export const generateOtpController: RequestHandler = async (req, res) => {
     return successHandler({
       res,
       message: result.message,
-      statusCode: 200,
+      data: result.data,
     });
   } catch (error) {
     return errorHandler({

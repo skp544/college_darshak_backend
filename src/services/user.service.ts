@@ -37,7 +37,7 @@ export const generateOtpService = async ({
 
   // Send Email if identifierType is EMAIL
   if (identifierType === "EMAIL") {
-    await mailSender(
+    mailSender(
       identifier,
       "Your OTP for College Decode",
       `
@@ -49,7 +49,7 @@ export const generateOtpService = async ({
     );
   }
 
-  return { message: "OTP sent successfully" };
+  return { message: "OTP sent successfully", data: otp };
 };
 
 //////////////////////////////////////////////////////
