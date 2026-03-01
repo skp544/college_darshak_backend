@@ -7,6 +7,7 @@ import { globalErrorHandler } from "./middlewares/error-handler.middlewares";
 import { errorHandler, successHandler } from "./utils/api-handlers";
 import { STATUS_CODES } from "./utils/status-codes";
 import userRouter from "./routes/user.routes";
+import collegeRouter from "./routes/college.routes";
 
 const app = express();
 
@@ -58,6 +59,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/v1/auth", userRouter);
+app.use("/api/v1/college", collegeRouter);
 
 /* ======================
    404 Handler 
