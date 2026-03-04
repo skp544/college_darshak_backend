@@ -1,6 +1,6 @@
+import { CollegeType } from "../constants/enums";
 import { STATUS_CODES } from "../constants/status-codes";
 import { prisma } from "../lib/prisma";
-import { CollegeType } from "../types";
 import { AppError } from "../utils/AppError";
 
 export const createCollegeService = async (data: {

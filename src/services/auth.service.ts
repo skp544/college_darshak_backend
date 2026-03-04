@@ -1,8 +1,8 @@
 import mailSender from "../helpers/mail";
 import { prisma } from "../lib/prisma";
-import { IdentifierType } from "../types";
 import { AppError } from "../utils/AppError";
 import { STATUS_CODES } from "../constants/status-codes";
+import { IDENTIFIER_TYPE, IdentifierType } from "../constants/enums";
 
 export const generateOtpService = async ({
   identifier,
@@ -39,7 +39,7 @@ export const generateOtpService = async ({
   // Send OTP
   //////////////////////////////////////////////////////
 
-  if (identifierType === "EMAIL") {
+  if (identifierType === IDENTIFIER_TYPE.EMAIL) {
     await mailSender(
       identifier,
       "OTP Verification - College Decode",
@@ -52,7 +52,7 @@ export const generateOtpService = async ({
     );
   }
 
-  if (identifierType === "PHONE") {
+  if (identifierType === IDENTIFIER_TYPE.PHONE) {
     // integrate SMS provider here (Twilio / MSG91)
     console.log(`OTP for ${identifier}: ${otp}`);
   }
@@ -90,7 +90,7 @@ export const verifyOtpService = async ({
   });
 
   if (!record) {
-    throw new AppError("Invalid or expired OTP", 400);
+    throw new AppError("Invalid or expired OTP", STATUS_CODES.UNAUTHORIZED);
   }
 
   // Clean up after successful verification
