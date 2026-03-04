@@ -1,6 +1,6 @@
 import mailSender from "../helpers/mail";
 import { prisma } from "../lib/prisma";
-import { IdentifierType } from "../types";
+import { IdentifierType } from "../constants";
 import { AppError } from "../utils/AppError";
 import { STATUS_CODES } from "../utils/status-codes";
 
@@ -18,12 +18,12 @@ export const generateOtpService = async ({
     );
   }
 
-  // Delete existing OTPs for that identifier
+  // Remove existing OTPs
   await prisma.otpSchema.deleteMany({
     where: { identifier },
   });
 
-  // Generate 6-digit OTP
+  // Generate OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   await prisma.otpSchema.create({
@@ -35,21 +35,32 @@ export const generateOtpService = async ({
     },
   });
 
-  // Send Email if identifierType is EMAIL
+  //////////////////////////////////////////////////////
+  // Send OTP
+  //////////////////////////////////////////////////////
+
   if (identifierType === "EMAIL") {
-    mailSender(
+    await mailSender(
       identifier,
-      "Your OTP for College Decode",
+      "OTP Verification - College Decode",
       `
-      <h2>OTP Verification</h2>
-      <p>Your OTP is:</p>
-      <h1>${otp}</h1>
-      <p>This OTP will expire in 5 minutes.</p>
+        <h2>OTP Verification</h2>
+        <p>Your OTP is:</p>
+        <h1>${otp}</h1>
+        <p>This OTP will expire in 5 minutes.</p>
       `,
     );
   }
 
-  return { message: "OTP sent successfully", data: otp };
+  if (identifierType === "PHONE") {
+    // integrate SMS provider here (Twilio / MSG91)
+    console.log(`OTP for ${identifier}: ${otp}`);
+  }
+
+  return {
+    message: "OTP sent successfully",
+    data: otp,
+  };
 };
 
 //////////////////////////////////////////////////////

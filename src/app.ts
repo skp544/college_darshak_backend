@@ -6,7 +6,7 @@ import helmet from "helmet";
 import { globalErrorHandler } from "./middlewares/error-handler.middlewares";
 import { errorHandler, successHandler } from "./utils/api-handlers";
 import { STATUS_CODES } from "./utils/status-codes";
-import userRouter from "./routes/user.routes";
+import userRouter from "./routes/auth.routes";
 import collegeRouter from "./routes/college.routes";
 
 const app = express();

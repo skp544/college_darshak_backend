@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { generateOtpService, verifyOtpService } from "../services/user.service";
+import { generateOtpService, verifyOtpService } from "../services/auth.service";
 import { successHandler, errorHandler } from "../utils/api-handlers";
 
 export const generateOtpController: RequestHandler = async (req, res) => {

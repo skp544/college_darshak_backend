@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   generateOtpController,
   verifyOtpController,
-} from "../controllers/user.controller";
+} from "../controllers/auth.controller";
 
 const userRouter = Router();
 

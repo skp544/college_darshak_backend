@@ -7,9 +7,7 @@ datasource db {
   provider = "postgresql"
 }
 
-//////////////////////////////////////////////////////
 // ENUMS
-//////////////////////////////////////////////////////
 
 enum Role {
   ADMIN
@@ -35,6 +33,12 @@ enum EducationLevel {
   POSTGRADUATE
 }
 
+enum AuthProvider {
+  EMAIL_PASSWORD
+  GOOGLE
+  OTP
+}
+
 //////////////////////////////////////////////////////
 // USER MODEL
 //////////////////////////////////////////////////////
@@ -45,6 +49,7 @@ model User {
   phoneNo        String          @unique
   password       String?
   role           Role            @default(STUDENT)
+  provider       AuthProvider
   createdAt      DateTime        @default(now())
   mentorDetails  MentorDetails?
   studentDetails StudentDetails?
@@ -53,6 +58,16 @@ model User {
 //////////////////////////////////////////////////////
 // OTP MODEL (NO FK — PRE-REGISTRATION)
 //////////////////////////////////////////////////////
+model OtpSchema {
+  id             String         @id @default(uuid())
+  identifier     String
+  identifierType IdentifierType
+  otp            String
+  createdAt      DateTime       @default(now())
+  expiresAt      DateTime
+
+  @@index([identifier])
+}
 
 // STUDENT DETAILS
 
@@ -90,17 +105,6 @@ model StudentTargetColleges {
   college College        @relation(fields: [collegeId], references: [id], onDelete: Cascade)
 
   @@index([studentId])
-}
-
-model OtpSchema {
-  id             String         @id @default(uuid())
-  identifier     String
-  identifierType IdentifierType
-  otp            String
-  createdAt      DateTime       @default(now())
-  expiresAt      DateTime
-
-  @@index([identifier])
 }
 
 //////////////////////////////////////////////////////
