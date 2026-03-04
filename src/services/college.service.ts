@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../constants/status-codes";
 import { prisma } from "../lib/prisma";
 import { CollegeType } from "../types";
 import { AppError } from "../utils/AppError";
@@ -53,7 +54,7 @@ export const getCollegeByIdService = async (id: string) => {
   });
 
   if (!result) {
-    throw new AppError("College not found", 404);
+    throw new AppError("College not found", STATUS_CODES.NOT_FOUND);
   }
 
   return { data: result };
@@ -81,7 +82,7 @@ export const updateCollegeService = async (
   });
 
   if (!college) {
-    throw new AppError("College not found", 404);
+    throw new AppError("College not found", STATUS_CODES.NOT_FOUND);
   }
 
   // If courses provided → delete old + recreate
@@ -128,7 +129,7 @@ export const deleteCollegeService = async (id: string) => {
   });
 
   if (!college) {
-    throw new AppError("College not found", 404);
+    throw new AppError("College not found", STATUS_CODES.NOT_FOUND);
   }
 
   const result = await prisma.college.delete({

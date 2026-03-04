@@ -5,7 +5,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import { globalErrorHandler } from "./middlewares/error-handler.middlewares";
 import { errorHandler, successHandler } from "./utils/api-handlers";
-import { STATUS_CODES } from "./utils/status-codes";
+import { STATUS_CODES } from "./constants/status-codes";
 import userRouter from "./routes/auth.routes";
 import collegeRouter from "./routes/college.routes";
 
@@ -54,7 +54,7 @@ app.get("/api", (req, res) => {
 
 app.get("/health", (req, res) => {
   res
-    .status(200)
+    .status(STATUS_CODES.SUCCESS)
     .json({ message: "Server is Healthy!", status: "Healthy", success: true });
 });
 

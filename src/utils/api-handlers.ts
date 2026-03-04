@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { STATUS_CODES } from "./status-codes";
+import { STATUS_CODES } from "../constants/status-codes";
 
 interface ErrorHandlerParams {
   res: Response;
