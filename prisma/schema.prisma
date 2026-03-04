@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -34,24 +28,69 @@ enum CollegeType {
   SEMIGOVERNMENT
 }
 
+enum EducationLevel {
+  SECONDARY
+  SENIOR_SECONDARY
+  UNDERGRADUATE
+  POSTGRADUATE
+}
+
 //////////////////////////////////////////////////////
 // USER MODEL
 //////////////////////////////////////////////////////
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  phoneNo   String   @unique
-  password  String
-  role      Role
-  createdAt DateTime @default(now())
-
-  mentorDetails MentorDetails?
+  id             String          @id @default(uuid())
+  email          String          @unique
+  phoneNo        String          @unique
+  password       String?
+  role           Role            @default(STUDENT)
+  createdAt      DateTime        @default(now())
+  mentorDetails  MentorDetails?
+  studentDetails StudentDetails?
 }
 
 //////////////////////////////////////////////////////
 // OTP MODEL (NO FK — PRE-REGISTRATION)
 //////////////////////////////////////////////////////
+
+// STUDENT DETAILS
+
+model StudentDetails {
+  id             String         @id @default(uuid())
+  userId         String         @unique
+  name           String
+  dob            DateTime
+  educationLevel EducationLevel
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  targetCourses  StudentTargetCourses[]
+  targetColleges StudentTargetColleges[]
+}
+
+model StudentTargetCourses {
+  id        String @id @default(uuid())
+  studentId String
+  course    String
+
+  student StudentDetails @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+model StudentTargetColleges {
+  id        String @id @default(uuid())
+  studentId String
+  collegeId String
+
+  student StudentDetails @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  college College        @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
 
 model OtpSchema {
   id             String         @id @default(uuid())
@@ -128,8 +167,9 @@ model College {
   phoneNo       String
   website       String
 
-  mentors MentorDetails[]
-  courses CollegeCourses[]
+  mentors               MentorDetails[]
+  courses               CollegeCourses[]
+  studentTargetColleges StudentTargetColleges[]
 }
 
 //////////////////////////////////////////////////////
