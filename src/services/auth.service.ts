@@ -2,7 +2,11 @@ import mailSender from "../helpers/mail";
 import { prisma } from "../lib/prisma";
 import { AppError } from "../utils/AppError";
 import { STATUS_CODES } from "../constants/status-codes";
-import { IDENTIFIER_TYPE, IdentifierType } from "../constants/enums";
+import {
+  AUTH_PROVIDER,
+  IDENTIFIER_TYPE,
+  IdentifierType,
+} from "../constants/enums";
 
 export const generateOtpService = async ({
   identifier,
@@ -66,7 +70,6 @@ export const generateOtpService = async ({
 //////////////////////////////////////////////////////
 // Verify OTP
 //////////////////////////////////////////////////////
-
 export const verifyOtpService = async ({
   identifier,
   otp,
@@ -81,22 +84,73 @@ export const verifyOtpService = async ({
     );
   }
 
+  //////////////////////////////////////////////////////
+  // Find OTP
+  //////////////////////////////////////////////////////
+
   const record = await prisma.otpSchema.findFirst({
     where: {
       identifier,
       otp,
       expiresAt: { gt: new Date() },
     },
+    orderBy: { createdAt: "desc" },
   });
 
   if (!record) {
     throw new AppError("Invalid or expired OTP", STATUS_CODES.UNAUTHORIZED);
   }
 
-  // Clean up after successful verification
+  //////////////////////////////////////////////////////
+  // Delete OTPs for identifier
+  //////////////////////////////////////////////////////
+
   await prisma.otpSchema.deleteMany({
     where: { identifier },
   });
 
-  return { message: "OTP verified successfully" };
+  //////////////////////////////////////////////////////
+  // Find existing user
+  //////////////////////////////////////////////////////
+
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [{ email: identifier }, { phoneNo: identifier }],
+    },
+  });
+
+  //////////////////////////////////////////////////////
+  // Create user if not exists
+  //////////////////////////////////////////////////////
+
+  let finalUser = user;
+
+  if (!finalUser) {
+    const userData =
+      record.identifierType === IDENTIFIER_TYPE.EMAIL
+        ? { email: identifier }
+        : { phoneNo: identifier };
+
+    finalUser = await prisma.user.create({
+      data: {
+        ...userData,
+        provider: AUTH_PROVIDER.OTP,
+      },
+    });
+  }
+
+  //////////////////////////////////////////////////////
+  // Return user data
+  //////////////////////////////////////////////////////
+
+  return {
+    message: "OTP verified successfully",
+    data: {
+      id: finalUser.id,
+      email: finalUser.email,
+      phoneNo: finalUser.phoneNo,
+      provider: finalUser.provider,
+      profileCompleted: finalUser.profileCompleted,
+    },
+  };
 };

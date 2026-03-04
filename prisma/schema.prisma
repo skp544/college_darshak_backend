@@ -44,15 +44,16 @@ enum AuthProvider {
 //////////////////////////////////////////////////////
 
 model User {
-  id             String          @id @default(uuid())
-  email          String          @unique
-  phoneNo        String          @unique
-  password       String?
-  role           Role            @default(STUDENT)
-  provider       AuthProvider
-  createdAt      DateTime        @default(now())
-  mentorDetails  MentorDetails?
-  studentDetails StudentDetails?
+  id               String          @id @default(uuid())
+  email            String?         @unique
+  phoneNo          String?         @unique
+  password         String?
+  role             Role            @default(STUDENT)
+  provider         AuthProvider
+  profileCompleted Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+  mentorDetails    MentorDetails?
+  studentDetails   StudentDetails?
 }
 
 //////////////////////////////////////////////////////
