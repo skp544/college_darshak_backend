@@ -1,5 +1,5 @@
 import { prisma } from "../lib/prisma";
-import { CollegeType } from "../constants";
+import { CollegeType } from "../types";
 import { AppError } from "../utils/AppError";
 
 export const createCollegeService = async (data: {

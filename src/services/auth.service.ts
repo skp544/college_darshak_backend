@@ -1,6 +1,6 @@
 import mailSender from "../helpers/mail";
 import { prisma } from "../lib/prisma";
-import { IdentifierType } from "../constants";
+import { IdentifierType } from "../types";
 import { AppError } from "../utils/AppError";
 import { STATUS_CODES } from "../utils/status-codes";
 
