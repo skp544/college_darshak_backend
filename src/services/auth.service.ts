@@ -7,6 +7,7 @@ import {
   IDENTIFIER_TYPE,
   IdentifierType,
 } from "../constants/enums";
+import { jwtToken } from "../utils/jwt";
 
 export const generateOtpService = async ({
   identifier,
@@ -139,6 +140,12 @@ export const verifyOtpService = async ({
     });
   }
 
+  const token = jwtToken.sign({
+    id: finalUser.id,
+    email: finalUser.email,
+    role: finalUser.role,
+  });
+
   //////////////////////////////////////////////////////
   // Return user data
   //////////////////////////////////////////////////////
@@ -151,6 +158,7 @@ export const verifyOtpService = async ({
       phoneNo: finalUser.phoneNo,
       provider: finalUser.provider,
       profileCompleted: finalUser.profileCompleted,
+      token: token,
     },
   };
 };

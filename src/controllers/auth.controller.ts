@@ -33,9 +33,10 @@ export const verifyOtpController: RequestHandler = async (req, res) => {
       otp,
     });
 
-    return successHandler({
+    successHandler({
       res,
       message: result.message,
+      data: result.data,
     });
   } catch (error) {
     return errorHandler({
