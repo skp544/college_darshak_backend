@@ -151,7 +151,8 @@ model AcademicDetails {
   companyName       String?
   hostelAvail       Boolean
   marksheetUrl      String
-  profilePhoto      String
+  profilePhotoUrl   String
+  studentIdCardUrl  String
 
   mentor MentorDetails @relation(fields: [mentorId], references: [id], onDelete: Cascade)
 }
@@ -161,17 +162,17 @@ model AcademicDetails {
 //////////////////////////////////////////////////////
 
 model College {
-  id            String      @id @default(uuid())
-  collegeName   String
-  description   String
-  established   String
-  type          CollegeType
-  location      String
-  state         String
-  accreditation String
-  phoneNo       String
-  website       String
-
+  id                    String                  @id @default(uuid())
+  collegeName           String
+  description           String
+  established           String
+  type                  CollegeType
+  location              String
+  state                 String
+  accreditation         String
+  phoneNo               String
+  website               String
+  featured              Boolean                 @default(false)
   mentors               MentorDetails[]
   courses               CollegeCourses[]
   studentTargetColleges StudentTargetColleges[]

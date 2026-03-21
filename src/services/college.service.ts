@@ -138,3 +138,22 @@ export const deleteCollegeService = async (id: string) => {
 
   return { data: result, message: "College deleted successfully!" };
 };
+
+export const setFeaturedCollegeService = async (id: string) => {
+  const college = await prisma.college.findUnique({
+    where: { id },
+  });
+
+  if (!college) {
+    throw new AppError("College not found", STATUS_CODES.NOT_FOUND);
+  }
+
+  const result = await prisma.college.update({
+    where: { id },
+    data: {
+      featured: true,
+    },
+  });
+
+  return { data: result, message: "College set as featured successfully!" };
+};

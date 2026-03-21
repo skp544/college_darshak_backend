@@ -6,6 +6,7 @@ import {
   getCollegeByIdService,
   updateCollegeService,
   deleteCollegeService,
+  setFeaturedCollegeService,
 } from "../services/college.service";
 
 export const createCollege: RequestHandler = async (req, res) => {
@@ -92,6 +93,24 @@ export const deleteCollege: RequestHandler = async (req, res) => {
     const { id } = req.params;
 
     const result = await deleteCollegeService(id as string);
+
+    successHandler({
+      res,
+      message: result.message,
+    });
+  } catch (error) {
+    errorHandler({
+      res,
+      error,
+    });
+  }
+};
+
+export const setFeaturedCollege: RequestHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await setFeaturedCollegeService(id as string);
 
     successHandler({
       res,
