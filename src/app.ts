@@ -6,7 +6,7 @@ import helmet from "helmet";
 import { globalErrorHandler } from "./middlewares/error-handler.middlewares";
 import { errorHandler, successHandler } from "./utils/api-handlers";
 import { STATUS_CODES } from "./constants/status-codes";
-import userRouter from "./routes/auth.routes";
+import authRouter from "./routes/auth.routes";
 import collegeRouter from "./routes/college.routes";
 
 const app = express();
@@ -58,7 +58,8 @@ app.get("/health", (req, res) => {
     .json({ message: "Server is Healthy!", status: "Healthy", success: true });
 });
 
-app.use("/api/v1/auth", userRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/college", collegeRouter);
 app.use("/api/v1/college", collegeRouter);
 
 /* ======================

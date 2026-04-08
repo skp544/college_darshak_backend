@@ -44,93 +44,108 @@ enum AuthProvider {
 //////////////////////////////////////////////////////
 
 model User {
-  id               String          @id @default(uuid())
-  email            String?         @unique
-  phoneNo          String?         @unique
-  password         String?
-  role             Role            @default(STUDENT)
-  provider         AuthProvider
-  profileCompleted Boolean         @default(false)
-  createdAt        DateTime        @default(now())
-  mentorDetails    MentorDetails?
-  studentDetails   StudentDetails?
+  id         String   @id @default(uuid())
+  email      String?  @unique
+  // phoneNo          String?         @unique
+  password   String?
+  role       Role     @default(STUDENT)
+  isVerified Boolean  @default(false)
+  // provider         AuthProvider
+  // profileCompleted Boolean         @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  mentor_profile  MentorProfile?
+  student_profile StudentProfile?
+  otp             Otp?
+
+  @@index([email])
 }
 
 //////////////////////////////////////////////////////
 // OTP MODEL (NO FK — PRE-REGISTRATION)
 //////////////////////////////////////////////////////
-model OtpSchema {
-  id             String         @id @default(uuid())
-  identifier     String
-  identifierType IdentifierType
-  otp            String
-  createdAt      DateTime       @default(now())
-  expiresAt      DateTime
+model Otp {
+  id        String   @id @default(uuid())
+  code      String
+  userId    String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
-  @@index([identifier])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // STUDENT DETAILS
 
-model StudentDetails {
-  id             String         @id @default(uuid())
-  userId         String         @unique
-  name           String
-  dob            DateTime
-  educationLevel EducationLevel
+model StudentProfile {
+  id     String @id @default(uuid())
+  userId String @unique
 
-  createdAt DateTime @default(now())
+  name           String
+  date_of_birth  DateTime?
+  educationLevel String?
+  targetCourses  String?
+  targetColleges String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  targetCourses  StudentTargetCourses[]
-  targetColleges StudentTargetColleges[]
-}
-
-model StudentTargetCourses {
-  id        String @id @default(uuid())
-  studentId String
-  course    String
-
-  student StudentDetails @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
-  @@index([studentId])
-}
-
-model StudentTargetColleges {
-  id        String @id @default(uuid())
-  studentId String
-  collegeId String
-
-  student StudentDetails @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  college College        @relation(fields: [collegeId], references: [id], onDelete: Cascade)
-
-  @@index([studentId])
+  createdAt DateTime @default(now())
 }
 
 //////////////////////////////////////////////////////
 // MENTOR DETAILS (1:1 WITH USER)
 //////////////////////////////////////////////////////
 
-model MentorDetails {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  name      String
-  dob       DateTime
+model MentorProfile {
+  id     String @id @default(uuid())
+  userId String @unique
+
+  name          String
+  date_of_birth DateTime
+  city          String
+  phone_no      String
+
+  university     String
+  college        String
+  course         String
+  specialization String
+  currentYear    Int
+  cgpa           Float
+
+  isPlaced    Boolean
+  companyName String?
+
+  languages         String[]
+  documentsVerified Boolean  @default(false)
+
   biography String
-  city      String
   state     String
   location  String
-  verified  Boolean  @default(false)
+  verified  Boolean @default(false)
 
-  collegeId String?
-
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  college College? @relation(fields: [collegeId], references: [id], onDelete: Restrict)
-
-  academicDetails AcademicDetails?
-  languages       MentorLanguages[]
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+// model StudentTargetCourses {
+//   id        String @id @default(uuid())
+//   studentId String
+//   course    String
+
+//   student StudentDetails @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+//   @@index([studentId])
+// }
+
+// model StudentTargetColleges {
+//   id        String @id @default(uuid())
+//   studentId String
+//   collegeId String
+
+//   student StudentDetails @relation(fields: [studentId], references: [id], onDelete: Cascade)
+//   college College        @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+//   @@index([studentId])
+// }
 
 //////////////////////////////////////////////////////
 // ACADEMIC DETAILS (1:1 WITH MENTOR)
@@ -154,7 +169,7 @@ model AcademicDetails {
   profilePhotoUrl   String
   studentIdCardUrl  String
 
-  mentor MentorDetails @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  // mentor MentorProfile  @relation(fields: [mentorId], references: [id], onDelete: Cascade)
 }
 
 //////////////////////////////////////////////////////
@@ -162,20 +177,20 @@ model AcademicDetails {
 //////////////////////////////////////////////////////
 
 model College {
-  id                    String                  @id @default(uuid())
-  collegeName           String
-  description           String
-  established           String
-  type                  CollegeType
-  location              String
-  state                 String
-  accreditation         String
-  phoneNo               String
-  website               String
-  featured              Boolean                 @default(false)
-  mentors               MentorDetails[]
-  courses               CollegeCourses[]
-  studentTargetColleges StudentTargetColleges[]
+  id            String           @id @default(uuid())
+  collegeName   String
+  description   String
+  established   String
+  type          CollegeType
+  location      String
+  state         String
+  accreditation String
+  phoneNo       String
+  website       String
+  featured      Boolean          @default(false)
+  // mentors               MentorDetails[]
+  courses       CollegeCourses[]
+  // studentTargetColleges StudentTargetColleges[]
 }
 
 //////////////////////////////////////////////////////
@@ -187,7 +202,7 @@ model MentorLanguages {
   mentorId String
   language String
 
-  mentor MentorDetails @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  // mentor MentorDetails @relation(fields: [mentorId], references: [id], onDelete: Cascade)
 
   @@index([mentorId])
 }
