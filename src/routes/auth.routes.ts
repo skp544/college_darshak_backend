@@ -128,4 +128,26 @@ authRouter.post("/send-otp", async (req, res) => {
   res.json({ message: "OTP sent" });
 });
 
+authRouter.post("/verify-otp", async (req, res) => {
+  const { email, code } = req.body;
+
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  if (!user) return res.status(404).json({ message: "User not found" });
+  const otp = await prisma.otp.findUnique({ where: { userId: user.id } });
+
+  if (!otp || otp.code !== code || otp.expiresAt < new Date()) {
+    return res.status(400).json({ message: "Invalid OTP" });
+  }
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { isVerified: true },
+  });
+
+  await prisma.otp.delete({ where: { userId: user.id } });
+
+  res.json({ message: "Verified successfully" });
+});
+
 export default authRouter;
