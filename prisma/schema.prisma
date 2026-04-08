@@ -100,28 +100,25 @@ model MentorProfile {
   id     String @id @default(uuid())
   userId String @unique
 
-  name          String
-  date_of_birth DateTime
-  city          String
-  phone_no      String
+  name        String
+  dateOfBirth DateTime?
+  state       String?
+  city        String?
+  phone       String?
 
-  university     String
-  college        String
-  course         String
-  specialization String
-  currentYear    Int
-  cgpa           Float
+  university     String?
+  college        String?
+  course         String?
+  specialization String?
+  currentYear    Int?
+  cgpa           Float?
 
-  isPlaced    Boolean
+  isPlaced    Boolean?
   companyName String?
 
-  languages         String[]
-  documentsVerified Boolean  @default(false)
+  languages String[]
 
-  biography String
-  state     String
-  location  String
-  verified  Boolean @default(false)
+  documentsVerified Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
