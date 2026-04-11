@@ -4,7 +4,6 @@ import { STATUS_CODES } from "../constants/status-codes";
 import { jwtToken } from "../utils/jwt";
 import { comparePassword, hashPassword } from "../utils/hash-password";
 import { ROLES } from "../constants/enums";
-import { Prisma } from "../../generated/prisma/client";
 
 export const signUpStudentService = async ({
   email,
@@ -145,82 +144,6 @@ export const loginService = async ({
               : user.mentor_profile,
         },
       },
-    };
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const sendOtpService = async ({ email }: { email: string }) => {
-  try {
-    if (!email) {
-      throw new AppError(
-        "Email is required",
-        STATUS_CODES.UNPROCESSABLE_ENTITY,
-      );
-    }
-
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) throw new AppError("User not found", STATUS_CODES.NOT_FOUND);
-
-    const code = Math.floor(1000 + Math.random() * 9000).toString();
-
-    await prisma.otp.upsert({
-      where: { userId: user.id },
-      update: {
-        code,
-        expiresAt: new Date(Date.now() + 5 * 60 * 1000),
-      },
-      create: {
-        code,
-        userId: user.id,
-        expiresAt: new Date(Date.now() + 5 * 60 * 1000),
-      },
-    });
-
-    return {
-      message: "OTP sent",
-      data: { otp: code },
-    };
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const verifyOtpService = async ({
-  email,
-  code,
-}: {
-  email: string;
-  code: string;
-}) => {
-  try {
-    if (!email || !code) {
-      throw new AppError(
-        "Email and OTP are required",
-        STATUS_CODES.UNPROCESSABLE_ENTITY,
-      );
-    }
-
-    const user = await prisma.user.findUnique({ where: { email } });
-
-    if (!user) throw new AppError("User not found", STATUS_CODES.NOT_FOUND);
-
-    const otp = await prisma.otp.findUnique({ where: { userId: user.id } });
-
-    if (!otp || otp.code !== code || otp.expiresAt < new Date()) {
-      throw new AppError("Invalid OTP", STATUS_CODES.BAD_REQUEST);
-    }
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { isVerified: true },
-    });
-
-    await prisma.otp.delete({ where: { userId: user.id } });
-
-    return {
-      message: "Verified successfully",
     };
   } catch (error) {
     throw error;

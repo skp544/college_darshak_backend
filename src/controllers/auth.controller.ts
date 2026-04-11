@@ -3,11 +3,10 @@ import { errorHandler, successHandler } from "../utils/api-handlers";
 import { STATUS_CODES } from "../constants/status-codes";
 import {
   loginService,
-  sendOtpService,
   signUpMentorService,
   signUpStudentService,
-  verifyOtpService,
 } from "../services/auth.service";
+import { sendOtpService, verifyOtpService } from "../services/otp.service";
 
 export const signUpStudent: RequestHandler = async (req, res) => {
   try {
