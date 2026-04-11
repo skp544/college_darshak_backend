@@ -6,6 +6,14 @@ export const ROLES = {
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
 
+export const MENTOR_STATUS = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+} as const;
+
+export type MentorStatus = (typeof MENTOR_STATUS)[keyof typeof MENTOR_STATUS];
+
 export const IDENTIFIER_TYPE = {
   EMAIL: "EMAIL",
   PHONE: "PHONE",
