@@ -8,6 +8,7 @@ import { errorHandler, successHandler } from "./utils/api-handlers";
 import { STATUS_CODES } from "./constants/status-codes";
 import authRouter from "./routes/auth.routes";
 import collegeRouter from "./routes/college.routes";
+import studentRouter from "./routes/student.routes";
 
 const app = express();
 
@@ -60,7 +61,7 @@ app.get("/health", (req, res) => {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/college", collegeRouter);
-app.use("/api/v1/college", collegeRouter);
+app.use("/api/v1/student", studentRouter);
 
 /* ======================
    404 Handler 
