@@ -9,6 +9,7 @@ import { STATUS_CODES } from "./constants/status-codes";
 import authRouter from "./routes/auth.routes";
 import collegeRouter from "./routes/college.routes";
 import studentRouter from "./routes/student.routes";
+import mentorRouter from "./routes/mentor.routes";
 
 const app = express();
 
@@ -48,7 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/api", (req, res) => {
   successHandler({
-    message: "Welcome to College Darshak API",
+    message: "Welcome to College Decode API",
     res,
   });
 });
@@ -62,6 +63,7 @@ app.get("/health", (req, res) => {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/college", collegeRouter);
 app.use("/api/v1/student", studentRouter);
+app.use("/api/v1/mentor", mentorRouter);
 
 /* ======================
    404 Handler 
