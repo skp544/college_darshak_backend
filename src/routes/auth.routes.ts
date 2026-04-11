@@ -14,7 +14,7 @@ const authRouter = Router();
 
 // new routes
 
-authRouter.post("signup/student", signUpStudent);
+authRouter.post("/signup/student", signUpStudent);
 
 authRouter.post("/signup/mentor", signUpMentor);
 

@@ -4,6 +4,7 @@ import { STATUS_CODES } from "../constants/status-codes";
 import { jwtToken } from "../utils/jwt";
 import { comparePassword, hashPassword } from "../utils/hash-password";
 import { ROLES } from "../constants/enums";
+import { Prisma } from "../../generated/prisma/client";
 
 export const signUpStudentService = async ({
   email,
@@ -34,7 +35,7 @@ export const signUpStudentService = async ({
         email,
         password: hashed,
         role: ROLES.STUDENT,
-        studentProfile: {
+        student_profile: {
           create: { name },
         },
       },
@@ -78,7 +79,7 @@ export const signUpMentorService = async ({
         email,
         password: hashed,
         role: ROLES.MENTOR,
-        mentorProfile: {
+        mentor_profile: {
           create: { name },
         },
       },
