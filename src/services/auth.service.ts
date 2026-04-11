@@ -4,6 +4,8 @@ import { STATUS_CODES } from "../constants/status-codes";
 import { jwtToken } from "../utils/jwt";
 import { comparePassword, hashPassword } from "../utils/hash-password";
 import { ROLES } from "../constants/enums";
+import { Role } from "../../generated/prisma/enums";
+import { errorHandler, successHandler } from "../utils/api-handlers";
 
 export const signUpStudentService = async ({
   email,
@@ -133,6 +135,36 @@ export const loginService = async ({
               ? user.student_profile
               : user.mentor_profile,
         },
+      },
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMeService = async (userId: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        student_profile: true,
+        mentor_profile: true,
+      },
+    });
+
+    if (!user) {
+      throw new AppError("User not found", STATUS_CODES.NOT_FOUND);
+    }
+
+    return {
+      data: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        profile:
+          user.role === Role.STUDENT
+            ? user.student_profile
+            : user.mentor_profile,
       },
     };
   } catch (error) {

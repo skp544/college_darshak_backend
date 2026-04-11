@@ -1,16 +1,13 @@
 import { Router } from "express";
 import {
+  getMe,
   login,
   sendOtp,
   signUpMentor,
   signUpStudent,
   verifyOtp,
 } from "../controllers/auth.controller";
-import { prisma } from "../lib/prisma";
 import { authMiddleware } from "../middlewares/auth.middlewares";
-import { Role } from "../../generated/prisma/enums";
-import { errorHandler, successHandler } from "../utils/api-handlers";
-import { STATUS_CODES } from "../constants/status-codes";
 
 const authRouter = Router();
 
@@ -29,35 +26,8 @@ authRouter.post("/send-otp", sendOtp);
 
 authRouter.post("/verify-otp", verifyOtp);
 
-// GET /api/me
+// GET /api/v1/auth/me
 
-authRouter.get("/me", authMiddleware, async (req, res) => {
-  const user = await prisma.user.findUnique({
-    where: { id: req.user.id },
-    include: {
-      student_profile: true,
-      mentor_profile: true,
-    },
-  });
-
-  if (!user) {
-    return errorHandler({
-      res,
-      statusCode: STATUS_CODES.NOT_FOUND,
-      message: "User not found",
-    });
-  }
-
-  successHandler({
-    res,
-    data: {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      profile:
-        user.role === Role.STUDENT ? user.student_profile : user.mentor_profile,
-    },
-  });
-});
+authRouter.get("/me", authMiddleware, getMe);
 
 export default authRouter;

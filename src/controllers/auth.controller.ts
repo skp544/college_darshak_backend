@@ -2,11 +2,14 @@ import { RequestHandler } from "express";
 import { errorHandler, successHandler } from "../utils/api-handlers";
 import { STATUS_CODES } from "../constants/status-codes";
 import {
+  getMeService,
   loginService,
   signUpMentorService,
   signUpStudentService,
 } from "../services/auth.service";
-import { sendOtpService, verifyOtpServiece } from "../services/otp.service";
+import { sendOtpService, verifyOtpService } from "../services/otp.service";
+import { Role } from "../../generated/prisma/enums";
+import { prisma } from "../lib/prisma";
 
 export const signUpStudent: RequestHandler = async (req, res) => {
   try {
@@ -91,6 +94,19 @@ export const verifyOtp: RequestHandler = async (req, res) => {
     });
   } catch (error) {
     return errorHandler({ res, error });
+  }
+};
+
+export const getMe: RequestHandler = async (req, res) => {
+  try {
+    const response = await getMeService(req.user.id);
+
+    successHandler({
+      res,
+      data: response.data,
+    });
+  } catch (err) {
+    errorHandler({ res, error: err });
   }
 };
 
