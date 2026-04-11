@@ -47,14 +47,14 @@ app.use(express.urlencoded({ extended: true }));
    Routes 
 ====================== */
 
-app.get("/api", (req, res) => {
+app.get("/api", (_req, res) => {
   successHandler({
     message: "Welcome to College Decode API",
     res,
   });
 });
 
-app.get("/health", (req, res) => {
+app.get("/health", (_req, res) => {
   res
     .status(STATUS_CODES.SUCCESS)
     .json({ message: "Server is Healthy!", status: "Healthy", success: true });
@@ -68,7 +68,7 @@ app.use("/api/v1/mentor", mentorRouter);
 /* ======================
    404 Handler 
 ====================== */
-app.use((req, res) => {
+app.use((_req, res) => {
   errorHandler({
     res,
     statusCode: STATUS_CODES.NOT_FOUND,
