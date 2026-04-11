@@ -10,9 +10,9 @@ import { sendOtpService, verifyOtpService } from "../services/otp.service";
 
 export const signUpStudent: RequestHandler = async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password } = req.body;
 
-    const response = await signUpStudentService({ email, password, name });
+    const response = await signUpStudentService({ email, password });
 
     return successHandler({
       statusCode: STATUS_CODES.CREATED,
@@ -32,7 +32,7 @@ export const signUpMentor: RequestHandler = async (req, res) => {
   try {
     const { email, password, name } = req.body;
 
-    const response = await signUpMentorService({ email, password, name });
+    const response = await signUpMentorService({ email, password });
 
     return successHandler({
       statusCode: STATUS_CODES.CREATED,

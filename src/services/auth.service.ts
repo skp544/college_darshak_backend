@@ -8,14 +8,12 @@ import { ROLES } from "../constants/enums";
 export const signUpStudentService = async ({
   email,
   password,
-  name,
 }: {
   email: string;
   password: string;
-  name: string;
 }) => {
   try {
-    if (!email || !password || !name) {
+    if (!email || !password) {
       throw new AppError(
         "Email, password and name are required",
         STATUS_CODES.UNPROCESSABLE_ENTITY,
@@ -33,10 +31,7 @@ export const signUpStudentService = async ({
       data: {
         email,
         password: hashed,
-        role: ROLES.STUDENT,
-        student_profile: {
-          create: { name },
-        },
+        role: "STUDENT",
       },
     });
 
@@ -52,14 +47,12 @@ export const signUpStudentService = async ({
 export const signUpMentorService = async ({
   email,
   password,
-  name,
 }: {
   email: string;
   password: string;
-  name: string;
 }) => {
   try {
-    if (!email || !password || !name) {
+    if (!email || !password) {
       throw new AppError(
         "Email, password and name are required",
         STATUS_CODES.UNPROCESSABLE_ENTITY,
@@ -78,9 +71,6 @@ export const signUpMentorService = async ({
         email,
         password: hashed,
         role: ROLES.MENTOR,
-        mentor_profile: {
-          create: { name },
-        },
       },
     });
 
