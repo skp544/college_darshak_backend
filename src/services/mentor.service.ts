@@ -1,3 +1,140 @@
+import { STATUS_CODES } from "../constants/status-codes";
+import { prisma } from "../lib/prisma";
+
+import { AppError } from "../utils/AppError";
+
+export const updateMentorPersonalDetailService = async ({
+  userId,
+  name,
+  dateOfBirth,
+  state,
+  city,
+  phone,
+  languages,
+}: {
+  userId: string;
+  name: string;
+  dateOfBirth: string;
+  state: string;
+  city: string;
+  phone: string;
+  languages: string[];
+}) => {
+  try {
+    if (!name || !dateOfBirth || !state || !city || !phone || !languages) {
+      throw new AppError("All fields are required", STATUS_CODES.BAD_REQUEST);
+    }
+
+    const profile = await prisma.mentorProfile.update({
+      where: { userId: userId },
+      data: {
+        name,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
+        state,
+        city,
+        phone,
+        languages,
+      },
+    });
+
+    return {
+      message: "Personal details updated",
+      data: profile,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateMentorAcademicDetailService = async ({
+  userId,
+  university,
+  college,
+  course,
+  specialization,
+  currentYear,
+  cgpa,
+  isPlaced,
+  companyName,
+}: {
+  userId: string;
+  university: string;
+  college: string;
+  course: string;
+  specialization: string;
+  currentYear: number;
+  cgpa: number;
+  isPlaced: boolean;
+  companyName: string;
+}) => {
+  try {
+    const profile = await prisma.mentorProfile.update({
+      where: { userId: userId },
+      data: {
+        university,
+        college,
+        course,
+        specialization,
+        currentYear,
+        cgpa,
+        isPlaced,
+        companyName,
+      },
+    });
+
+    return {
+      message: "Academic details updated",
+      data: profile,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const uploadMentorDocumentsService = async (
+  userId: string,
+  files: {
+    [fieldname: string]: Express.Multer.File[];
+  },
+) => {
+  try {
+    const studentIdUrl = files?.studentId?.[0]?.path || null;
+    const marksheetUrl = files?.marksheet?.[0]?.path || null;
+    const profilePhotoUrl = files?.profilePhoto?.[0]?.path || null;
+
+    const profile = await prisma.mentorProfile.update({
+      where: { userId },
+      data: {
+        studentIdUrl,
+        marksheetUrl,
+        profilePhotoUrl,
+        documentsVerified: false,
+      },
+    });
+    return { data: profile, message: "Documents uploaded successfully" };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMeService = async (userId: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { mentor_profile: true },
+    });
+
+    if (!user) {
+      throw new AppError("User not found", STATUS_CODES.NOT_FOUND);
+    }
+
+    return { data: user.mentor_profile };
+  } catch (error) {
+    throw error;
+  }
+};
+
+/*
 import { prisma } from "../lib/prisma";
 import { AppError } from "../utils/AppError";
 import { STATUS_CODES } from "../constants/status-codes";
@@ -223,3 +360,4 @@ export const uploadDocumentsService = async ({
     message: "Profile completed successfully",
   };
 };
+*/
