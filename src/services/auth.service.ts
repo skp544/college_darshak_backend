@@ -128,7 +128,7 @@ export const loginService = async ({
     if (!isMatch)
       throw new AppError("Invalid credentials", STATUS_CODES.BAD_REQUEST);
 
-    const token = jwtToken.sign(user);
+    const token = jwtToken.sign({ id: user.id, role: user.role });
 
     return {
       message: "Login successful",
