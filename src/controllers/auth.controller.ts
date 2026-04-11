@@ -6,7 +6,7 @@ import {
   signUpMentorService,
   signUpStudentService,
 } from "../services/auth.service";
-import { sendOtpService, verifyOtpService } from "../services/otp.service";
+import { sendOtpService, verifyOtpServiece } from "../services/otp.service";
 
 export const signUpStudent: RequestHandler = async (req, res) => {
   try {

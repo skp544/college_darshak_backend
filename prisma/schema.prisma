@@ -126,6 +126,9 @@ model MentorProfile {
 
   languages String[]
 
+  studentIdUrl      String?
+  marksheetUrl      String?
+  profilePhotoUrl   String?
   documentsVerified Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
