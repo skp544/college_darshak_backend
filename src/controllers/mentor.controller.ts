@@ -72,6 +72,8 @@ export const uploadMentorDocument: RequestHandler = async (req, res) => {
       [fieldname: string]: Express.Multer.File[];
     };
 
+    console.log(files, "files");
+
     const response = await uploadMentorDocumentsService(req.user.id, files);
 
     successHandler({
@@ -80,6 +82,7 @@ export const uploadMentorDocument: RequestHandler = async (req, res) => {
       data: response.data,
     });
   } catch (err) {
+    console.log(err);
     errorHandler({ res, error: err });
   }
 };

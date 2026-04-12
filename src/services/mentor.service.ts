@@ -25,11 +25,20 @@ export const updateMentorPersonalDetailService = async ({
       throw new AppError("All fields are required", STATUS_CODES.BAD_REQUEST);
     }
 
-    const profile = await prisma.mentorProfile.update({
-      where: { userId: userId },
-      data: {
+    const profile = await prisma.mentorProfile.upsert({
+      where: { userId },
+      update: {
         name,
-        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+        state,
+        city,
+        phone,
+        languages,
+      },
+      create: {
+        userId,
+        name,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
         state,
         city,
         phone,
@@ -113,6 +122,7 @@ export const uploadMentorDocumentsService = async (
     });
     return { data: profile, message: "Documents uploaded successfully" };
   } catch (error) {
+    console.log("Err in service", error);
     throw error;
   }
 };

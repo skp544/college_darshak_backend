@@ -23,7 +23,7 @@ export const errorHandler = ({
   message = "Something went wrong",
   statusCode = STATUS_CODES.INTERNAL_SERVER_ERROR,
 }: ErrorHandlerParams): Response => {
-  console.error(error); // 🔥 logging
+  console.error(error, "error"); // 🔥 logging
 
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({

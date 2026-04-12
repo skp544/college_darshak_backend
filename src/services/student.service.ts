@@ -9,14 +9,14 @@ export const studentProfileUpdateService = async ({
   dateOfBirth,
   educationLevel,
   targetCourse,
-  targetCollege,
+  targetColleges,
 }: {
   userId: string;
   name: string;
   dateOfBirth: string;
   educationLevel: string;
   targetCourse: string;
-  targetCollege: string;
+  targetColleges: string;
 }) => {
   try {
     if (
@@ -24,18 +24,26 @@ export const studentProfileUpdateService = async ({
       !dateOfBirth ||
       !educationLevel ||
       !targetCourse ||
-      !targetCollege
+      !targetColleges
     ) {
       throw new AppError("All fields are required", STATUS_CODES.BAD_REQUEST);
     }
-    const profile = await prisma.studentProfile.update({
+    const profile = await prisma.studentProfile.upsert({
       where: { userId },
-      data: {
+      update: {
         name,
-        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
         educationLevel,
         targetCourse,
-        targetCollege,
+        targetColleges,
+      },
+      create: {
+        userId,
+        name,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+        educationLevel,
+        targetCourse,
+        targetColleges,
       },
     });
 

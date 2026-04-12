@@ -41,6 +41,7 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.log(error, "eror in middleware");
     return errorHandler({ res, error, message: "Unauthorized" });
   }
 };

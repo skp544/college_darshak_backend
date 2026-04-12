@@ -1,10 +1,8 @@
 import { Router } from "express";
-import { successHandler, errorHandler } from "../utils/api-handlers";
 import { authMiddleware, isMentor } from "../middlewares/auth.middlewares";
-import { prisma } from "../lib/prisma";
 import { upload } from "../config/multer";
-import { STATUS_CODES } from "../constants/status-codes";
 import {
+  getMe,
   updateMentorAcademicDetail,
   updateMentorPersonalDetail,
   uploadMentorDocument,
@@ -28,8 +26,9 @@ mentorRouter.put(
   updateMentorAcademicDetail,
 );
 
+// PUT /api/v1/mentor/documents
 mentorRouter.put(
-  "/mentor/documents",
+  "/documents",
   authMiddleware,
   isMentor,
   upload.fields([
@@ -41,7 +40,6 @@ mentorRouter.put(
 );
 
 // GET /api/mentor/profile
-
-mentorRouter.get("/profile", authMiddleware, isMentor, async (req, res) => {});
+mentorRouter.get("/profile", authMiddleware, isMentor, getMe);
 
 export default mentorRouter;

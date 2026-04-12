@@ -90,9 +90,9 @@ model StudentProfile {
   userId String @unique
 
   name           String
-  date_of_birth  DateTime?
+  dateOfBirth    DateTime?
   educationLevel String?
-  targetCourses  String?
+  targetCourse   String?
   targetColleges String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

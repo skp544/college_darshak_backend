@@ -7,7 +7,7 @@ import {
 
 export const studentProfileUpdate: RequestHandler = async (req, res) => {
   try {
-    const { name, dateOfBirth, educationLevel, targetCourse, targetCollege } =
+    const { name, dateOfBirth, educationLevel, targetCourse, targetColleges } =
       req.body;
 
     const response = await studentProfileUpdateService({
@@ -16,7 +16,7 @@ export const studentProfileUpdate: RequestHandler = async (req, res) => {
       dateOfBirth,
       educationLevel,
       targetCourse,
-      targetCollege,
+      targetColleges,
     });
 
     successHandler({
